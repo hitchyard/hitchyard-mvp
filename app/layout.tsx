@@ -1,5 +1,6 @@
 import './globals.css';
 import React from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: 'Hitchyard',
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen">
           {children}
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
