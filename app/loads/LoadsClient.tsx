@@ -20,6 +20,8 @@ type Props = {
 export default function LoadsClient({ loads }: Props) {
   const [selectedLoadId, setSelectedLoadId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const openModal = (loadId: string) => {
     setSelectedLoadId(loadId);
@@ -29,6 +31,18 @@ export default function LoadsClient({ loads }: Props) {
   const closeModal = () => {
     setModalOpen(false);
     setSelectedLoadId(null);
+  };
+
+  const handleBidSuccess = (message?: string) => {
+    // Close modal, show toast
+    setModalOpen(false);
+    setSelectedLoadId(null);
+    setToastMessage(message ?? "Bid submitted successfully.");
+    setShowToast(true);
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -79,7 +93,16 @@ export default function LoadsClient({ loads }: Props) {
         )}
       </section>
 
-      <BidModal loadId={selectedLoadId ?? ""} open={modalOpen} onClose={closeModal} />
+      <BidModal loadId={selectedLoadId ?? ""} open={modalOpen} onClose={closeModal} onSuccess={handleBidSuccess} />
+
+      {/* Toast Notification */}
+      {showToast && toastMessage && (
+        <div className="fixed top-6 right-6 z-50">
+          <div className="px-4 py-2 rounded-md shadow-md bg-deep-green text-white font-medium">
+            {toastMessage}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

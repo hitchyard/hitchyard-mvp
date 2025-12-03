@@ -7,9 +7,10 @@ type Props = {
   loadId: string;
   open: boolean;
   onClose: () => void;
+  onSuccess?: (message?: string) => void;
 };
 
-export default function BidModal({ loadId, open, onClose }: Props) {
+export default function BidModal({ loadId, open, onClose, onSuccess }: Props) {
   const [bidAmount, setBidAmount] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -28,8 +29,15 @@ export default function BidModal({ loadId, open, onClose }: Props) {
       if (res?.error) {
         setMessage(res.error);
       } else {
-        setMessage(res?.message ?? "Bid submitted successfully.");
+        const successMsg = res?.message ?? "Bid submitted successfully.";
+        setMessage(successMsg);
         setBidAmount("");
+        // Notify parent of success so it can close modal and show toast
+        try {
+          onSuccess?.(successMsg);
+        } catch (err) {
+          // ignore parent handler errors
+        }
       }
     } catch (err) {
       setMessage((err as Error)?.message ?? String(err));
