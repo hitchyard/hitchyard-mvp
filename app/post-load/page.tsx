@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { postLoadAction } from "./actions";
 
-export default function PostLoadPage() {
+function PostLoadPageContent() {
   const router = useRouter();
   const [originZip, setOriginZip] = useState("");
   const [destinationZip, setDestinationZip] = useState("");
@@ -221,5 +221,15 @@ export default function PostLoadPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+import PostLoadAccessCheck from "./access-check";
+
+export default function PostLoadPage() {
+  return (
+    <PostLoadAccessCheck>
+      <PostLoadPageContent />
+    </PostLoadAccessCheck>
   );
 }
